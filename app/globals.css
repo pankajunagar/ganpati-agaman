@@ -27,40 +27,6 @@ body {
   text-align: center;
 }
 
-.marquee-wrap {
-  width: 100%;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid #5a2a1a;
-  border-bottom: 1px solid #5a2a1a;
-  padding: 10px 0;
-  margin: 14px 0 20px;
-  box-sizing: border-box;
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-  animation: marquee-scroll 50s linear infinite;
-}
-
-.marquee-item {
-  font-family: "Hind Vadodara", sans-serif;
-  font-weight: 700;
-  font-size: 17px;
-  color: #ffcf6b;
-  flex-shrink: 0;
-}
-
-@keyframes marquee-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
 .layout {
   display: flex;
@@ -220,4 +186,32 @@ canvas.dragging {
 .btn-whatsapp:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.organized-by {
+    margin: 24px 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+    border: 1px dashed;
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+.informative-sub {
+    display: block;
+    width: 100%;
+    padding: 7px 0;
+     background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #5a2a1a;
+  border-bottom: 1px solid #5a2a1a;
+    color: #f4825f;
+    font-size: clamp(14px, 2vw, 19px);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.5;
 }

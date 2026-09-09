@@ -238,32 +238,10 @@ export default function Home() {
   return (
     <>
       <h1 className="title">|| શ્રી ગણપતિ બાપ્પા મોરિયા ||</h1>
-
-      <div className="marquee-wrap">
-        <div className="marquee-track">
-          <span className="marquee-item">
-            🙏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;આવો... ભક્તિ, શ્રદ્ધા અને આનંદ
-            સાથે બાપ્પા નું સ્વાગત કરીએ !&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-          <span className="marquee-item">
-            🙏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;આવો... ભક્તિ, શ્રદ્ધા અને આનંદ
-            સાથે બાપ્પા નું સ્વાગત કરીએ !&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-          <span className="marquee-item">
-            🙏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;આવો... ભક્તિ, શ્રદ્ધા અને આનંદ
-            સાથે બાપ્પા નું સ્વાગત કરીએ !&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-          <span className="marquee-item">
-            🙏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;આવો... ભક્તિ, શ્રદ્ધા અને આનંદ
-            સાથે બાપ્પા નું સ્વાગત કરીએ !&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-          <span className="marquee-item">
-            🙏&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;આવો... ભક્તિ, શ્રદ્ધા અને આનંદ
-            સાથે બાપ્પા નું સ્વાગત કરીએ !&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-        </div>
-      </div>
-
+      <marquee direction="left" class="informative-sub">
+        🙏  આવો... ભક્તિ, શ્રદ્ધા અને આનંદ સાથે બાપ્પા નું સ્વાગત કરીએ ! 🙏
+      </marquee>
+      <div className="organized-by">Friends Group દ્વારા આયોજિત</div>
       <div className="layout">
         <div className="controls">
           <div className="field">
@@ -337,7 +315,7 @@ export default function Home() {
       </div>
 
       <footer className="site-footer">
-        Design by:  <strong>Pankaj Unagar</strong>
+        Design by: <strong>Pankaj Unagar</strong>
       </footer>
     </>
   );
