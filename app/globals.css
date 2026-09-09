@@ -1,0 +1,223 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1a0505, #3a0a0a 60%, #1a0505);
+  font-family: "Poppins", sans-serif;
+  color: #f5e6c8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 60px;
+}
+
+.title {
+  font-family: "Hind Vadodara", sans-serif;
+  font-size: 22px;
+  color: #ffcf6b;
+  margin: 0 0 4px;
+  text-align: center;
+}
+
+.marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #5a2a1a;
+  border-bottom: 1px solid #5a2a1a;
+  padding: 10px 0;
+  margin: 14px 0 20px;
+  box-sizing: border-box;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: marquee-scroll 50s linear infinite;
+}
+
+.marquee-item {
+  font-family: "Hind Vadodara", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #ffcf6b;
+  flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.layout {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.controls {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid #5a2a1a;
+  border-radius: 14px;
+  padding: 20px;
+  width: 400px;
+  flex-shrink: 0;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label.field-label {
+  display: block;
+  font-size: 13px;
+  color: #ffcf6b;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.upload-box {
+  border: 2px dashed #7a3a22;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: #200a08;
+  transition: border-color 0.2s;
+  display: block;
+}
+
+.upload-box:hover {
+  border-color: #ffcf6b;
+}
+
+.upload-box input {
+  display: none;
+}
+
+.upload-box .upload-icon {
+  font-size: 22px;
+}
+
+.upload-box span.upload-text {
+  font-size: 12px;
+  color: #cba579;
+  display: block;
+  margin-top: 6px;
+}
+
+.zoom-hint {
+  font-size: 11px;
+  color: #cba579;
+  display: block;
+  margin-top: 4px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+button.btn-download,
+button.btn-whatsapp,
+button.btn-reset {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button.btn-download {
+  padding: 12px;
+  border: none;
+  background: linear-gradient(135deg, #ffcf6b, #d98c1f);
+  color: #3a1500;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+button.btn-whatsapp {
+  padding: 12px;
+  border: none;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+button.btn-reset {
+  padding: 8px;
+  border: 1px solid #7a3a22;
+  background: transparent;
+  color: #cba579;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+button.btn-download:active,
+button.btn-whatsapp:active {
+  transform: scale(0.98);
+}
+
+.canvas-wrap {
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  line-height: 0;
+}
+
+canvas {
+  width: 320px;
+  height: auto;
+  display: block;
+  touch-action: none;
+}
+
+canvas.draggable {
+  cursor: grab;
+}
+
+canvas.dragging {
+  cursor: grabbing;
+}
+
+@media (min-width: 700px) {
+  canvas {
+    width: 400px;
+  }
+}
+
+.site-footer {
+  margin-top: 36px;
+  text-align: center;
+  color: #a67c52;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.site-footer strong {
+  color: #ffcf6b;
+}
+
+.btn-download:disabled,
+.btn-whatsapp:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
