@@ -667,6 +667,7 @@ async function handleWhatsAppShare() {
             રીસેટ કરો
           </button>
         </div>
+        {hasPhoto && (
         <div className="poster-preview">
           {/* ===============================================
             SMALL CIRCLE EDITOR
@@ -692,11 +693,11 @@ async function handleWhatsAppShare() {
 
           {/* INSTRUCTION */}
 
-          <div className="zoom-hint">
+          {/* <div className="zoom-hint">
             {hasPhoto
               ? "ફોટોને ખેંચીને circleમાં ગોઠવો ✋"
               : "પહેલા તમારો ફોટો પસંદ કરો"}
-          </div>
+          </div> */}
 
           {/* ===============================================
             ZOOM
@@ -721,6 +722,7 @@ async function handleWhatsAppShare() {
             </div>
           )}
         </div>
+        )}
       </div>
 
       {/* FOOTER */}
