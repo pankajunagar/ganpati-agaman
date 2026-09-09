@@ -2,11 +2,11 @@
   box-sizing: border-box;
 }
 
-html,
+/* html,
 body {
   margin: 0;
   padding: 0;
-}
+} */
 
 body {
   min-height: 100vh;
@@ -153,7 +153,7 @@ canvas {
   width: 320px;
   height: auto;
   display: block;
-  touch-action: none;
+  /* touch-action: none; */
 }
 
 canvas.draggable {
@@ -220,12 +220,12 @@ canvas.dragging {
   box-sizing: border-box;
 }
 
-html,
+/* html,
 body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-}
+} */
 
 body {
   min-height: 100vh;
@@ -428,7 +428,7 @@ canvas {
 
   display: block;
 
-  touch-action: none;
+  /* touch-action: none; */
 }
 
 canvas.draggable {
@@ -475,5 +475,41 @@ canvas.dragging {
   .organized-by {
     font-size: 13px;
     padding: 6px 18px;
+  }
+}
+
+.informative-sub {
+  width: 100%;
+  overflow: hidden;
+
+  padding: 8px 0;
+
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid #5a2a1a;
+  border-bottom: 1px solid #5a2a1a;
+
+  color: #f4825f;
+  font-size: clamp(14px, 2vw, 19px);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  line-height: 1.5;
+
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+
+  animation: marquee-scroll 25s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
   }
 }
