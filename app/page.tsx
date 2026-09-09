@@ -522,51 +522,56 @@ export default function Home() {
   // WHATSAPP
   // ===================================================
 
-  function handleWhatsAppShare() {
-    if (!hasPhoto) {
-      alert("કૃપા કરીને પહેલા તમારો ફોટો પસંદ કરો.");
+async function handleWhatsAppShare() {
+  const canvas = createFinalPoster();
 
-      return;
-    }
-
-    const finalCanvas = createFinalPoster();
-
-    if (!finalCanvas) {
-      return;
-    }
-
-    finalCanvas.toBlob((blob) => {
-      if (!blob) return;
-
-      // Download final poster
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-
-      link.href = url;
-
-      link.download = "ganpati-poster.png";
-
-      document.body.appendChild(link);
-
-      link.click();
-
-      link.remove();
-
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 1000);
-
-      // Open WhatsApp
-      setTimeout(() => {
-        const message = "બાપ્પા આવી રહ્યા છે... ચાલો, સ્વાગત કરીએ! 🙏";
-
-        window.location.href =
-          "https://wa.me/?text=" + encodeURIComponent(message);
-      }, 700);
-    }, "image/png");
+  if (!canvas) {
+    alert("પહેલા ફોટો પસંદ કરો.");
+    return;
   }
 
+  canvas.toBlob(async (blob) => {
+    if (!blob) return;
+
+    const file = new File([blob], "ganpati-poster.png", {
+      type: "image/png",
+    });
+
+    const shareData = {
+      files: [file],
+      title: "શ્રી ગણપતિ બાપ્પા મોરિયા",
+      text: "બાપ્પા આવી રહ્યા છે... ચાલો, સ્વાગત કરીએ! 🙏",
+    };
+
+    // Mobile browsers: image + text share
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        // User cancelled share
+        if ((error as DOMException)?.name === "AbortError") {
+          return;
+        }
+      }
+    }
+
+    // Fallback: WhatsApp message
+    const message = encodeURIComponent(
+      "બાપ્પા આવી રહ્યા છે... ચાલો, સ્વાગત કરીએ! 🙏"
+    );
+
+    window.open(
+      `https://wa.me/?text=${message}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }, "image/png");
+}
   // ===================================================
   // RESET
   // ===================================================
