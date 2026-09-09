@@ -2,252 +2,622 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Photo-circle position on the template image (pixel coordinates at native 1686x2528 resolution)
-const CIRCLE = { x: 846.5, y: 932.5, r: 292 };
+// =====================================================
+// ORIGINAL POSTER SETTINGS
+// =====================================================
+
+const CIRCLE = {
+  x: 846.5,
+  y: 932.5,
+  r: 292,
+};
+
 const CANVAS_W = 1686;
 const CANVAS_H = 2528;
+
 const TEMPLATE_SRC = "/ganpati-template.png";
 
+// Small editor circle shown to user
+const EDITOR_SIZE = 260;
+
 export default function Home() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const editorCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const baseImgRef = useRef<HTMLImageElement | null>(null);
-  const userPhotoRef = useRef<HTMLImageElement | null>(null);
+  const templateRef = useRef<HTMLImageElement | null>(null);
 
-  const [baseLoaded, setBaseLoaded] = useState(false);
+  const photoRef = useRef<HTMLImageElement | null>(null);
+
+  const [templateLoaded, setTemplateLoaded] = useState(false);
+
   const [hasPhoto, setHasPhoto] = useState(false);
+
   const [fileName, setFileName] = useState("");
 
-  const [zoom, setZoom] = useState(1); // 1.0 = photo fully covers the circle, no extra zoom
+  const [zoom, setZoom] = useState(1);
+
   const [panX, setPanX] = useState(0);
+
   const [panY, setPanY] = useState(0);
 
-  // dragging refs (don't need to trigger re-render on every mouse move)
-  const draggingRef = useRef(false);
-  const dragStartRef = useRef({ x: 0, y: 0 });
-  const panStartRef = useRef({ x: 0, y: 0 });
+  // ===================================================
+  // DRAG REFS
+  // ===================================================
 
-  // ---- load the base template image once ----
+  const draggingRef = useRef(false);
+
+  const dragStartRef = useRef({
+    x: 0,
+    y: 0,
+  });
+
+  const panStartRef = useRef({
+    x: 0,
+    y: 0,
+  });
+
+  // ===================================================
+  // LOAD TEMPLATE
+  // ===================================================
+
   useEffect(() => {
     const img = new Image();
+
     img.src = TEMPLATE_SRC;
+
     img.onload = () => {
-      baseImgRef.current = img;
-      setBaseLoaded(true);
+      templateRef.current = img;
+      setTemplateLoaded(true);
     };
   }, []);
 
-  // ---- helper: clamp pan so the photo always fully covers the circle ----
+  // ===================================================
+  // PHOTO SCALE
+  // ===================================================
+
+  function getBaseScale(photo: HTMLImageElement) {
+    return Math.max(EDITOR_SIZE / photo.width, EDITOR_SIZE / photo.height);
+  }
+
+  // ===================================================
+  // CLAMP PHOTO
+  // ===================================================
+
   function clampPan(nextZoom: number, nextPanX: number, nextPanY: number) {
-    const photo = userPhotoRef.current;
-    if (!photo) return { x: nextPanX, y: nextPanY };
-    const baseScale = Math.max(
-      (CIRCLE.r * 2) / photo.width,
-      (CIRCLE.r * 2) / photo.height,
-    );
+    const photo = photoRef.current;
+
+    if (!photo) {
+      return {
+        x: nextPanX,
+        y: nextPanY,
+      };
+    }
+
+    const baseScale = getBaseScale(photo);
+
     const scale = baseScale * nextZoom;
-    const dw = photo.width * scale;
-    const dh = photo.height * scale;
-    const maxPanX = Math.max(0, dw / 2 - CIRCLE.r);
-    const maxPanY = Math.max(0, dh / 2 - CIRCLE.r);
+
+    const width = photo.width * scale;
+
+    const height = photo.height * scale;
+
+    const maxX = Math.max(0, width / 2 - EDITOR_SIZE / 2);
+
+    const maxY = Math.max(0, height / 2 - EDITOR_SIZE / 2);
+
     return {
-      x: Math.max(-maxPanX, Math.min(maxPanX, nextPanX)),
-      y: Math.max(-maxPanY, Math.min(maxPanY, nextPanY)),
+      x: Math.max(-maxX, Math.min(maxX, nextPanX)),
+
+      y: Math.max(-maxY, Math.min(maxY, nextPanY)),
     };
   }
 
-  // ---- render the canvas whenever relevant state changes ----
-  useEffect(() => {
-    render();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseLoaded, hasPhoto, zoom, panX, panY]);
+  // ===================================================
+  // DRAW SMALL EDITOR CIRCLE
+  // ===================================================
 
-  function render() {
-    const canvas = canvasRef.current;
-    const baseImg = baseImgRef.current;
-    if (!canvas || !baseImg || !baseLoaded) return;
+  useEffect(() => {
+    drawEditor();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateLoaded, hasPhoto, zoom, panX, panY]);
+
+  function drawEditor() {
+    const canvas = editorCanvasRef.current;
+
+    if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
+
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, EDITOR_SIZE, EDITOR_SIZE);
 
-    const photo = userPhotoRef.current;
+    // =================================================
+    // CIRCLE CLIP
+    // =================================================
+
+    ctx.save();
+
+    ctx.beginPath();
+
+    ctx.arc(EDITOR_SIZE / 2, EDITOR_SIZE / 2, EDITOR_SIZE / 2, 0, Math.PI * 2);
+
+    ctx.closePath();
+
+    ctx.clip();
+
+    // =================================================
+    // PHOTO
+    // =================================================
+
+    const photo = photoRef.current;
+
     if (photo) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(CIRCLE.x, CIRCLE.y, CIRCLE.r, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
+      const baseScale = getBaseScale(photo);
 
-      const baseScale = Math.max(
-        (CIRCLE.r * 2) / photo.width,
-        (CIRCLE.r * 2) / photo.height,
-      );
       const scale = baseScale * zoom;
-      const dw = photo.width * scale;
-      const dh = photo.height * scale;
-      const dx = CIRCLE.x - dw / 2 + panX;
-      const dy = CIRCLE.y - dh / 2 + panY;
-      ctx.drawImage(photo, dx, dy, dw, dh);
-      ctx.restore();
+
+      const width = photo.width * scale;
+
+      const height = photo.height * scale;
+
+      const x = EDITOR_SIZE / 2 - width / 2 + panX;
+
+      const y = EDITOR_SIZE / 2 - height / 2 + panY;
+
+      ctx.drawImage(photo, x, y, width, height);
     }
+
+    // =================================================
+    // EMPTY CIRCLE
+    // =================================================
+
+    if (!photo) {
+      ctx.fillStyle = "#f5eee4";
+
+      ctx.fillRect(0, 0, EDITOR_SIZE, EDITOR_SIZE);
+
+      ctx.fillStyle = "#9b8065";
+
+      ctx.font = "600 18px Arial";
+
+      ctx.textAlign = "center";
+
+      ctx.textBaseline = "middle";
+
+      ctx.fillText("તમારો ફોટો", EDITOR_SIZE / 2, EDITOR_SIZE / 2 - 10);
+
+      ctx.font = "14px Arial";
+
+      ctx.fillText("અહીં સેટ કરો", EDITOR_SIZE / 2, EDITOR_SIZE / 2 + 16);
+    }
+
+    ctx.restore();
+
+    // =================================================
+    // EDITOR BORDER
+    // =================================================
+
+    ctx.save();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      EDITOR_SIZE / 2,
+      EDITOR_SIZE / 2,
+      EDITOR_SIZE / 2 - 2,
+      0,
+      Math.PI * 2,
+    );
+
+    ctx.strokeStyle = "#cba579";
+
+    ctx.lineWidth = 4;
+
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  // ---- photo upload ----
+  // ===================================================
+  // UPLOAD PHOTO
+  // ===================================================
+
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onload = (ev) => {
+
+    reader.onload = (event) => {
       const img = new Image();
+
       img.onload = () => {
-        userPhotoRef.current = img;
+        photoRef.current = img;
+
         setFileName(file.name);
+
         setHasPhoto(true);
+
+        // Reset position
         setZoom(1);
+
         setPanX(0);
+
         setPanY(0);
       };
-      img.src = ev.target?.result as string;
+
+      img.src = event.target?.result as string;
     };
+
     reader.readAsDataURL(file);
   }
 
+  // ===================================================
+  // ZOOM
+  // ===================================================
+
   function handleZoomChange(e: React.ChangeEvent<HTMLInputElement>) {
     const nextZoom = Number(e.target.value) / 100;
+
     const clamped = clampPan(nextZoom, panX, panY);
+
     setZoom(nextZoom);
+
     setPanX(clamped.x);
+
     setPanY(clamped.y);
   }
 
-  // ---- drag to reposition the photo inside the circle ----
-  function getCanvasCoords(clientX: number, clientY: number) {
-    const canvas = canvasRef.current!;
+  // ===================================================
+  // EDITOR COORDINATES
+  // ===================================================
+
+  function getEditorCoords(clientX: number, clientY: number) {
+    const canvas = editorCanvasRef.current;
+
+    if (!canvas) {
+      return {
+        x: 0,
+        y: 0,
+      };
+    }
+
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+
+    const scaleX = EDITOR_SIZE / rect.width;
+
+    const scaleY = EDITOR_SIZE / rect.height;
+
     return {
       x: (clientX - rect.left) * scaleX,
+
       y: (clientY - rect.top) * scaleY,
     };
   }
 
+  // ===================================================
+  // START DRAG
+  // ===================================================
+
   function startDrag(clientX: number, clientY: number) {
-    if (!userPhotoRef.current) return;
+    if (!photoRef.current) {
+      return;
+    }
+
+    const point = getEditorCoords(clientX, clientY);
+
     draggingRef.current = true;
-    dragStartRef.current = getCanvasCoords(clientX, clientY);
-    panStartRef.current = { x: panX, y: panY };
+
+    dragStartRef.current = point;
+
+    panStartRef.current = {
+      x: panX,
+      y: panY,
+    };
   }
 
+  // ===================================================
+  // MOVE DRAG
+  // ===================================================
+
   function moveDrag(clientX: number, clientY: number) {
-    if (!draggingRef.current) return;
-    const p = getCanvasCoords(clientX, clientY);
-    const nextPanX = panStartRef.current.x + (p.x - dragStartRef.current.x);
-    const nextPanY = panStartRef.current.y + (p.y - dragStartRef.current.y);
-    const clamped = clampPan(zoom, nextPanX, nextPanY);
+    if (!draggingRef.current) {
+      return;
+    }
+
+    const point = getEditorCoords(clientX, clientY);
+
+    const nextX = panStartRef.current.x + (point.x - dragStartRef.current.x);
+
+    const nextY = panStartRef.current.y + (point.y - dragStartRef.current.y);
+
+    const clamped = clampPan(zoom, nextX, nextY);
+
     setPanX(clamped.x);
+
     setPanY(clamped.y);
   }
+
+  // ===================================================
+  // END DRAG
+  // ===================================================
 
   function endDrag() {
     draggingRef.current = false;
   }
 
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => moveDrag(e.clientX, e.clientY);
-    const onMouseUp = () => endDrag();
-    const onTouchMove = (e: TouchEvent) => {
-      if (draggingRef.current && e.touches[0]) {
-        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
-        e.preventDefault();
-      }
-    };
-    const onTouchEnd = () => endDrag();
+  // ===================================================
+  // POINTER EVENTS
+  //
+  // Vertical page scrolling works normally.
+  // No preventDefault().
+  // ===================================================
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd);
-    return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
+  useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!draggingRef.current) {
+        return;
+      }
+
+      moveDrag(e.clientX, e.clientY);
     };
+
+    const handlePointerUp = () => {
+      endDrag();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+
+    window.addEventListener("pointerup", handlePointerUp);
+
+    window.addEventListener("pointercancel", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+
+      window.removeEventListener("pointerup", handlePointerUp);
+
+      window.removeEventListener("pointercancel", handlePointerUp);
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [panX, panY, zoom]);
 
-  // ---- download ----
-  function handleDownload() {
-    if (!hasPhoto || !userPhotoRef.current) {
-      alert("કૃપા કરીને પહેલા તમારો ફોટો પસંદ કરો.");
-      return;
+  // ===================================================
+  // FINAL POSTER GENERATION
+  //
+  // User never sees the original poster.
+  // It is generated only when downloading.
+  // ===================================================
+
+  function createFinalPoster(): HTMLCanvasElement | null {
+    const template = templateRef.current;
+
+    const photo = photoRef.current;
+
+    if (!template || !photo) {
+      return null;
     }
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const canvas = document.createElement("canvas");
 
-    const link = document.createElement("a");
-    link.download = "ganpati-poster.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    canvas.width = CANVAS_W;
+
+    canvas.height = CANVAS_H;
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      return null;
+    }
+
+    // =================================================
+    // DRAW ORIGINAL POSTER
+    // =================================================
+
+    ctx.drawImage(template, 0, 0, CANVAS_W, CANVAS_H);
+
+    // =================================================
+    // CIRCLE CLIP
+    // =================================================
+
+    ctx.save();
+
+    ctx.beginPath();
+
+    ctx.arc(CIRCLE.x, CIRCLE.y, CIRCLE.r, 0, Math.PI * 2);
+
+    ctx.closePath();
+
+    ctx.clip();
+
+    // =================================================
+    // IMPORTANT:
+    //
+    // Convert small editor movement into
+    // original poster coordinates.
+    // =================================================
+
+    const editorScale = (CIRCLE.r * 2) / EDITOR_SIZE;
+
+    const baseScale = Math.max(
+      (CIRCLE.r * 2) / photo.width,
+
+      (CIRCLE.r * 2) / photo.height,
+    );
+
+    const scale = baseScale * zoom;
+
+    const photoWidth = photo.width * scale;
+
+    const photoHeight = photo.height * scale;
+
+    // Convert editor pan to poster pan
+    const finalPanX = panX * editorScale;
+
+    const finalPanY = panY * editorScale;
+
+    const dx = CIRCLE.x - photoWidth / 2 + finalPanX;
+
+    const dy = CIRCLE.y - photoHeight / 2 + finalPanY;
+
+    // =================================================
+    // DRAW PHOTO INTO ORIGINAL POSTER
+    // =================================================
+
+    ctx.drawImage(photo, dx, dy, photoWidth, photoHeight);
+
+    ctx.restore();
+
+    return canvas;
   }
 
-  // ---- WhatsApp share ----
-  function handleWhatsAppShare() {
-    if (!hasPhoto || !userPhotoRef.current) {
+  // ===================================================
+  // DOWNLOAD
+  // ===================================================
+
+  function handleDownload() {
+    if (!hasPhoto) {
       alert("કૃપા કરીને પહેલા તમારો ફોટો પસંદ કરો.");
+
       return;
     }
-    const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    canvas.toBlob((blob) => {
+    const finalCanvas = createFinalPoster();
+
+    if (!finalCanvas) {
+      alert("પોસ્ટર બનાવવામાં સમસ્યા આવી.");
+
+      return;
+    }
+
+    finalCanvas.toBlob((blob) => {
       if (!blob) return;
 
-      // First download poster
+      const url = URL.createObjectURL(blob);
+
       const link = document.createElement("a");
+
+      link.href = url;
+
       link.download = "ganpati-poster.png";
-      link.href = URL.createObjectURL(blob);
+
+      document.body.appendChild(link);
+
       link.click();
 
-      // Then open WhatsApp
+      link.remove();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    }, "image/png");
+  }
+
+  // ===================================================
+  // WHATSAPP
+  // ===================================================
+
+  function handleWhatsAppShare() {
+    if (!hasPhoto) {
+      alert("કૃપા કરીને પહેલા તમારો ફોટો પસંદ કરો.");
+
+      return;
+    }
+
+    const finalCanvas = createFinalPoster();
+
+    if (!finalCanvas) {
+      return;
+    }
+
+    finalCanvas.toBlob((blob) => {
+      if (!blob) return;
+
+      // Download final poster
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      link.download = "ganpati-poster.png";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+
+      // Open WhatsApp
       setTimeout(() => {
         const message = "બાપ્પા આવી રહ્યા છે... ચાલો, સ્વાગત કરીએ! 🙏";
 
         window.location.href =
           "https://wa.me/?text=" + encodeURIComponent(message);
-      }, 500);
+      }, 700);
     }, "image/png");
   }
 
-  // ---- reset ----
+  // ===================================================
+  // RESET
+  // ===================================================
+
   function handleReset() {
-    userPhotoRef.current = null;
+    photoRef.current = null;
+
+    draggingRef.current = false;
+
     setHasPhoto(false);
+
     setFileName("");
+
     setZoom(1);
+
     setPanX(0);
+
     setPanY(0);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
+
+  // ===================================================
+  // UI
+  // ===================================================
 
   return (
     <>
+      {/* HEADER */}
+
       <h1 className="title">|| શ્રી ગણપતિ બાપ્પા મોરિયા ||</h1>
+
       <div className="informative-sub">
         <div className="marquee-content">
           🙏 આવો... ભક્તિ, શ્રદ્ધા અને આનંદ સાથે બાપ્પાનું સ્વાગત કરીએ! 🙏
         </div>
       </div>
+
       <div className="organized-by">Friends Group દ્વારા આયોજિત</div>
-      <div className="layout">
+
+      {/* =================================================
+          PHOTO EDITOR
+      ================================================= */}
+
+      <div className="photo-editor">
         <div className="controls">
           <div className="field">
             <span className="field-label">તમારો ફોટો</span>
+
             <label className="upload-box">
               <input
                 ref={fileInputRef}
@@ -255,31 +625,18 @@ export default function Home() {
                 accept="image/*"
                 onChange={handlePhotoChange}
               />
+
               <div className="upload-icon">📷</div>
+
               <span className="upload-text">
                 {fileName ? `✓ ${fileName}` : "ફોટો પસંદ કરો"}
               </span>
             </label>
           </div>
 
-          {hasPhoto && (
-            <div className="field">
-              <span className="field-label">
-                ફોટો ઝૂમ (Zoom){" "}
-                <span style={{ color: "#cba579", fontWeight: 400 }}>
-                  {Math.round(zoom * 100)}%
-                </span>
-              </span>
-              <input
-                type="range"
-                min={100}
-                max={300}
-                value={Math.round(zoom * 100)}
-                onChange={handleZoomChange}
-              />
-              <span className="zoom-hint">ફોટોને ખેંચીને (drag) ગોઠવો ✋</span>
-            </div>
-          )}
+          {/* ===============================================
+            DOWNLOAD
+        ================================================ */}
 
           <button
             className="btn-download"
@@ -289,6 +646,8 @@ export default function Home() {
             📥 પોસ્ટર ડાઉનલોડ કરો
           </button>
 
+          {/* WHATSAPP */}
+
           <button
             className="btn-whatsapp"
             onClick={handleWhatsAppShare}
@@ -296,29 +655,206 @@ export default function Home() {
           >
             💬 WhatsApp પર શેર કરો
           </button>
+
+          {/* RESET */}
+
           <button className="btn-reset" onClick={handleReset}>
             રીસેટ કરો
           </button>
         </div>
+        <div className="poster-preview">
+          {/* ===============================================
+            SMALL CIRCLE EDITOR
+        ================================================ */}
 
-        <div className="canvas-wrap">
-          <canvas
-            ref={canvasRef}
-            width={CANVAS_W}
-            height={CANVAS_H}
-            className={hasPhoto ? "draggable" : ""}
-            onMouseDown={(e) => startDrag(e.clientX, e.clientY)}
-            onTouchStart={(e) => {
-              if (e.touches[0])
-                startDrag(e.touches[0].clientX, e.touches[0].clientY);
-            }}
-          />
+          <div className="circle-editor">
+            <canvas
+              ref={editorCanvasRef}
+              width={EDITOR_SIZE}
+              height={EDITOR_SIZE}
+              className={
+                hasPhoto ? "photo-editor-canvas active" : "photo-editor-canvas"
+              }
+              onPointerDown={(e) => {
+                if (!hasPhoto) {
+                  return;
+                }
+
+                startDrag(e.clientX, e.clientY);
+              }}
+            />
+          </div>
+
+          {/* INSTRUCTION */}
+
+          <div className="zoom-hint">
+            {hasPhoto
+              ? "ફોટોને ખેંચીને circleમાં ગોઠવો ✋"
+              : "પહેલા તમારો ફોટો પસંદ કરો"}
+          </div>
+
+          {/* ===============================================
+            ZOOM
+        ================================================ */}
+
+          {hasPhoto && (
+            <div className="zoom-section">
+              <div className="zoom-title">
+                <span>ફોટો ઝૂમ</span>
+
+                <span>{Math.round(zoom * 100)}%</span>
+              </div>
+
+              <input
+                className="zoom-range"
+                type="range"
+                min="100"
+                max="300"
+                value={Math.round(zoom * 100)}
+                onChange={handleZoomChange}
+              />
+            </div>
+          )}
         </div>
       </div>
+
+      {/* FOOTER */}
 
       <footer className="site-footer">
         Design by: <strong>Pankaj Unagar</strong>
       </footer>
     </>
   );
+  // return (
+  //   <>
+  //     {/* ================================================
+  //         HEADER
+  //     ================================================= */}
+
+  //     <h1 className="title">|| શ્રી ગણપતિ બાપ્પા મોરિયા ||</h1>
+
+  //     <div className="informative-sub">
+  //       <div className="marquee-content">
+  //         🙏 આવો... ભક્તિ, શ્રદ્ધા અને આનંદ સાથે બાપ્પાનું સ્વાગત કરીએ! 🙏
+  //       </div>
+  //     </div>
+
+  //     <div className="organized-by">Friends Group દ્વારા આયોજિત</div>
+
+  //     {/* ================================================
+  //         MAIN LAYOUT
+  //     ================================================= */}
+
+  //     <div className="layout">
+  //       {/* ==============================================
+  //           CONTROLS
+  //       =============================================== */}
+
+  //       <div className="controls">
+  //         {/* PHOTO UPLOAD */}
+
+  //         <div className="field">
+  //           <span className="field-label">તમારો ફોટો</span>
+
+  //           <label className="upload-box">
+  //             <input
+  //               ref={fileInputRef}
+  //               type="file"
+  //               accept="image/*"
+  //               onChange={handlePhotoChange}
+  //             />
+
+  //             <div className="upload-icon">📷</div>
+
+  //             <span className="upload-text">
+  //               {fileName ? `✓ ${fileName}` : "ફોટો પસંદ કરો"}
+  //             </span>
+  //           </label>
+  //         </div>
+
+  //         {/* ZOOM */}
+
+  //         {hasPhoto && (
+  //           <div className="field">
+  //             <span className="field-label">
+  //               ફોટો ઝૂમ (Zoom){" "}
+  //               <span
+  //                 style={{
+  //                   color: "#cba579",
+  //                   fontWeight: 400,
+  //                 }}
+  //               >
+  //                 {Math.round(zoom * 100)}%
+  //               </span>
+  //             </span>
+
+  //             <input
+  //               type="range"
+  //               min={100}
+  //               max={300}
+  //               value={Math.round(zoom * 100)}
+  //               onChange={handleZoomChange}
+  //             />
+
+  //             <span className="zoom-hint">ફોટોને ખેંચીને (drag) ગોઠવો ✋</span>
+  //           </div>
+  //         )}
+
+  //         {/* DOWNLOAD */}
+
+  //         <button
+  //           className="btn-download"
+  //           onClick={handleDownload}
+  //           disabled={!hasPhoto}
+  //         >
+  //           📥 પોસ્ટર ડાઉનલોડ કરો
+  //         </button>
+
+  //         {/* WHATSAPP */}
+
+  //         <button
+  //           className="btn-whatsapp"
+  //           onClick={handleWhatsAppShare}
+  //           disabled={!hasPhoto}
+  //         >
+  //           💬 WhatsApp પર શેર કરો
+  //         </button>
+
+  //         {/* RESET */}
+
+  //         <button className="btn-reset" onClick={handleReset}>
+  //           રીસેટ કરો
+  //         </button>
+  //       </div>
+
+  //       {/* ==============================================
+  //           POSTER
+  //       =============================================== */}
+
+  //       <div className="canvas-wrap">
+  //         <canvas
+  //           ref={canvasRef}
+  //           width={CANVAS_W}
+  //           height={CANVAS_H}
+  //           className={hasPhoto ? "draggable" : ""}
+  //           onPointerDown={(e) => {
+  //             if (!userPhotoRef.current) {
+  //               return;
+  //             }
+
+  //             startDrag(e.clientX, e.clientY);
+  //           }}
+  //         />
+  //       </div>
+  //     </div>
+
+  //     {/* ================================================
+  //         FOOTER
+  //     ================================================= */}
+
+  //     <footer className="site-footer">
+  //       Design by: <strong>Pankaj Unagar</strong>
+  //     </footer>
+  //   </>
+  // );
 }

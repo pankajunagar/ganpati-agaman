@@ -27,7 +27,6 @@ body {
   text-align: center;
 }
 
-
 .layout {
   display: flex;
   gap: 28px;
@@ -189,31 +188,31 @@ canvas.dragging {
 }
 
 .organized-by {
-    margin: 24px 0;
-    text-align: center;
-    font-size: 17px;
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: 0.3px;
-    border: 1px dashed;
-    padding: 5px 20px;
-    border-radius: 10px;
+  margin: 24px 0;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+  border: 1px dashed;
+  padding: 5px 20px;
+  border-radius: 10px;
 }
 
 .informative-sub {
-    display: block;
-    width: 100%;
-    padding: 7px 0;
-     background: rgba(0, 0, 0, 0.3);
+  display: block;
+  width: 100%;
+  padding: 7px 0;
+  background: rgba(0, 0, 0, 0.3);
   border-top: 1px solid #5a2a1a;
   border-bottom: 1px solid #5a2a1a;
-    color: #f4825f;
-    font-size: clamp(14px, 2vw, 19px);
-    font-weight: 600;
-    letter-spacing: 0.4px;
-    white-space: nowrap;
-    overflow: hidden;
-    line-height: 1.5;
+  color: #f4825f;
+  font-size: clamp(14px, 2vw, 19px);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 1.5;
 }
 
 * {
@@ -365,11 +364,7 @@ body {
   border: none !important;
   padding: 12px !important;
 
-  background: linear-gradient(
-    135deg,
-    #ffcf6b,
-    #d98c1f
-  ) !important;
+  background: linear-gradient(135deg, #ffcf6b, #d98c1f) !important;
 
   color: #3a1500 !important;
   font-weight: 700 !important;
@@ -380,11 +375,7 @@ body {
   border: none !important;
   padding: 12px !important;
 
-  background: linear-gradient(
-    135deg,
-    #25d366,
-    #128c7e
-  ) !important;
+  background: linear-gradient(135deg, #25d366, #128c7e) !important;
 
   color: #fff !important;
   font-weight: 700 !important;
@@ -409,16 +400,25 @@ body {
 
 /* POSTER */
 .canvas-wrap {
-  width: fit-content;
-  max-width: 100%;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
 
-  background: #000;
-  border-radius: 14px;
+.canvas-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-  overflow: hidden;
+.canvas-wrap canvas.draggable {
+  cursor: grab;
+  touch-action: pan-y;
+}
 
-  box-shadow:
-    0 15px 45px rgba(0, 0, 0, 0.65);
+.canvas-wrap canvas.draggable:active {
+  cursor: grabbing;
 }
 
 canvas {
@@ -455,7 +455,6 @@ canvas.dragging {
 
 /* MOBILE */
 @media (max-width: 767.98px) {
-
   body {
     padding: 18px 10px 40px;
   }
@@ -512,4 +511,190 @@ canvas.dragging {
   to {
     transform: translateX(-100%);
   }
+}
+
+.poster-generator {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.title {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.informative-sub {
+  width: 100%;
+  overflow: hidden;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee-scroll 14s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.organized-by {
+  text-align: center;
+  margin: 10px 0 25px;
+}
+
+/* EDITOR */
+
+.photo-editor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.poster-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* UPLOAD */
+
+.upload-box {
+  width: 100%;
+  min-height: 70px;
+  border: 2px dashed #cba579;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.upload-box input {
+  display: none;
+}
+
+.upload-icon {
+  font-size: 25px;
+}
+
+.upload-text {
+  font-size: 16px;
+}
+
+/* ==========================================
+   SMALL ROUND PHOTO EDITOR
+========================================== */
+
+.circle-editor {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.photo-editor-canvas {
+  width: 260px;
+  height: 260px;
+  display: block;
+  border-radius: 50%;
+  background: #f5eee4;
+  box-shadow:
+    0 0 0 4px #cba579,
+    0 8px 25px rgba(0, 0, 0, 0.2);
+
+  touch-action: pan-y;
+}
+
+.photo-editor-canvas.active {
+  cursor: grab;
+}
+
+.photo-editor-canvas.active:active {
+  cursor: grabbing;
+}
+
+/* HINT */
+
+/* .editor-hint {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.8;
+} */
+
+/* ZOOM */
+
+.zoom-section {
+  width: 100%;
+  max-width: 400px;
+}
+
+.zoom-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.zoom-range {
+  width: 100%;
+}
+
+/* BUTTONS */
+
+.btn-download,
+.btn-whatsapp,
+.btn-reset {
+  width: 100%;
+  max-width: 400px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-download:disabled,
+.btn-whatsapp:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* FOOTER */
+
+.site-footer {
+  text-align: center;
+  margin-top: 30px;
 }
