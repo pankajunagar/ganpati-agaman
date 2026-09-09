@@ -1,481 +1,57 @@
+/* ==========================================
+   GLOBAL
+========================================== */
+
 * {
   box-sizing: border-box;
 }
 
-/* html,
-body {
-  margin: 0;
-  padding: 0;
-} */
-
 body {
   min-height: 100vh;
-  background: linear-gradient(160deg, #1a0505, #3a0a0a 60%, #1a0505);
-  font-family: "Poppins", sans-serif;
-  color: #f5e6c8;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin: 0;
   padding: 28px 16px 60px;
-}
 
-.title {
-  font-family: "Hind Vadodara", sans-serif;
-  font-size: 22px;
-  color: #ffcf6b;
-  margin: 0 0 4px;
-  text-align: center;
-}
-
-.layout {
-  display: flex;
-  gap: 28px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  max-width: 1000px;
-  width: 100%;
-}
-
-.controls {
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid #5a2a1a;
-  border-radius: 14px;
-  padding: 20px;
-  width: 400px;
-  flex-shrink: 0;
-}
-
-.field {
-  margin-bottom: 18px;
-}
-
-.field label.field-label {
-  display: block;
-  font-size: 13px;
-  color: #ffcf6b;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.upload-box {
-  border: 2px dashed #7a3a22;
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  background: #200a08;
-  transition: border-color 0.2s;
-  display: block;
-}
-
-.upload-box:hover {
-  border-color: #ffcf6b;
-}
-
-.upload-box input {
-  display: none;
-}
-
-.upload-box .upload-icon {
-  font-size: 22px;
-}
-
-.upload-box span.upload-text {
-  font-size: 12px;
-  color: #cba579;
-  display: block;
-  margin-top: 6px;
-}
-
-.zoom-hint {
-  font-size: 11px;
-  color: #cba579;
-  display: block;
-  margin-top: 4px;
-}
-
-input[type="range"] {
-  width: 100%;
-}
-
-button.btn-download,
-button.btn-whatsapp,
-button.btn-reset {
-  width: 100%;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-button.btn-download {
-  padding: 12px;
-  border: none;
-  background: linear-gradient(135deg, #ffcf6b, #d98c1f);
-  color: #3a1500;
-  font-weight: 700;
-  margin-top: 6px;
-}
-
-button.btn-whatsapp {
-  padding: 12px;
-  border: none;
-  background: linear-gradient(135deg, #25d366, #128c7e);
-  color: #fff;
-  font-weight: 700;
-  margin-top: 10px;
-}
-
-button.btn-reset {
-  padding: 8px;
-  border: 1px solid #7a3a22;
-  background: transparent;
-  color: #cba579;
-  font-size: 12px;
-  margin-top: 8px;
-}
-
-button.btn-download:active,
-button.btn-whatsapp:active {
-  transform: scale(0.98);
-}
-
-.canvas-wrap {
-  background: #000;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  line-height: 0;
-}
-
-canvas {
-  width: 320px;
-  height: auto;
-  display: block;
-  /* touch-action: none; */
-}
-
-canvas.draggable {
-  cursor: grab;
-}
-
-canvas.dragging {
-  cursor: grabbing;
-}
-
-@media (min-width: 700px) {
-  canvas {
-    width: 400px;
-  }
-}
-
-.site-footer {
-  margin-top: 36px;
-  text-align: center;
-  color: #a67c52;
-  font-size: 12px;
-  opacity: 0.85;
-}
-
-.site-footer strong {
-  color: #ffcf6b;
-}
-
-.btn-download:disabled,
-.btn-whatsapp:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.organized-by {
-  margin: 24px 0;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 0.3px;
-  border: 1px dashed;
-  padding: 5px 20px;
-  border-radius: 10px;
-}
-
-.informative-sub {
-  display: block;
-  width: 100%;
-  padding: 7px 0;
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid #5a2a1a;
-  border-bottom: 1px solid #5a2a1a;
-  color: #f4825f;
-  font-size: clamp(14px, 2vw, 19px);
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 1.5;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-} */
-
-body {
-  min-height: 100vh;
   background:
     radial-gradient(circle at top, #4b1111 0%, transparent 45%),
     linear-gradient(160deg, #1a0505, #3a0a0a 60%, #1a0505);
+
   font-family: "Poppins", sans-serif;
   color: #f5e6c8;
 }
 
-/* TITLE */
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.poster-generator {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
 .title {
+  margin: 10px 0 20px;
+
+  text-align: center;
+
   font-family: "Hind Vadodara", sans-serif;
   font-size: clamp(20px, 3vw, 28px);
-  color: #ffcf6b;
-  text-align: center;
   font-weight: 700;
-}
-
-/* MARQUEE */
-.informative-sub {
-  display: block;
-  width: 100%;
-  padding: 8px 0;
-
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid #5a2a1a;
-  border-bottom: 1px solid #5a2a1a;
-
-  color: #f4825f;
-  font-size: clamp(14px, 2vw, 19px);
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  line-height: 1.5;
-}
-
-/* ORGANIZED BY */
-.organized-by {
-  display: inline-block;
-
-  margin: 18px auto 10px;
-  padding: 7px 22px;
-
-  font-size: 15px;
-  font-weight: 600;
 
   color: #ffcf6b;
-
-  border: 1px dashed #7a3a22;
-  border-radius: 50px;
-
-  background: rgba(0, 0, 0, 0.25);
 }
 
-/* CONTROL CARD */
-.controls {
-  background: rgba(0, 0, 0, 0.38);
 
-  border: 1px solid #5a2a1a;
-  border-radius: 16px;
-
-  padding: 22px;
-
-  box-shadow:
-    0 10px 35px rgba(0, 0, 0, 0.35),
-    inset 0 1px rgba(255, 207, 107, 0.05);
-}
-
-/* FIELD */
-.field {
-  margin-bottom: 18px;
-}
-
-.field-label {
-  display: block;
-  font-size: 14px;
-  color: #ffcf6b;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.zoom-value {
-  color: #cba579;
-  font-weight: 400;
-}
-
-/* UPLOAD */
-.upload-box {
-  border: 2px dashed #7a3a22;
-  border-radius: 12px;
-
-  padding: 18px;
-
-  text-align: center;
-  cursor: pointer;
-
-  background: #200a08;
-
-  transition: all 0.25s ease;
-}
-
-.upload-box:hover {
-  border-color: #ffcf6b;
-  background: #2b0d09;
-  transform: translateY(-1px);
-}
-
-.upload-box input {
-  display: none;
-}
-
-.upload-icon {
-  font-size: 28px;
-}
-
-.upload-text {
-  font-size: 13px;
-  color: #cba579;
-  display: block;
-  margin-top: 7px;
-}
-
-/* RANGE */
-.form-range {
-  accent-color: #d98c1f;
-}
-
-.zoom-hint {
-  font-size: 11px;
-  color: #cba579;
-  display: block;
-  margin-top: 3px;
-}
-
-/* DOWNLOAD */
-.btn-download {
-  border: none !important;
-  padding: 12px !important;
-
-  background: linear-gradient(135deg, #ffcf6b, #d98c1f) !important;
-
-  color: #3a1500 !important;
-  font-weight: 700 !important;
-}
-
-/* WHATSAPP */
-.btn-whatsapp {
-  border: none !important;
-  padding: 12px !important;
-
-  background: linear-gradient(135deg, #25d366, #128c7e) !important;
-
-  color: #fff !important;
-  font-weight: 700 !important;
-}
-
-/* RESET */
-.btn-reset {
-  padding: 9px !important;
-
-  border: 1px solid #7a3a22 !important;
-
-  background: transparent !important;
-  color: #cba579 !important;
-
-  font-size: 12px !important;
-}
-
-.btn-download:not(:disabled):active,
-.btn-whatsapp:not(:disabled):active {
-  transform: scale(0.98);
-}
-
-/* POSTER */
-.canvas-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.canvas-wrap canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.canvas-wrap canvas.draggable {
-  cursor: grab;
-  touch-action: pan-y;
-}
-
-.canvas-wrap canvas.draggable:active {
-  cursor: grabbing;
-}
-
-canvas {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-
-  display: block;
-
-  /* touch-action: none; */
-}
-
-canvas.draggable {
-  cursor: grab;
-}
-
-canvas.dragging {
-  cursor: grabbing;
-}
-
-/* FOOTER */
-.site-footer {
-  margin-top: 30px;
-
-  text-align: center;
-
-  color: #a67c52;
-  font-size: 12px;
-}
-
-.site-footer strong {
-  color: #ffcf6b;
-}
-
-/* MOBILE */
-@media (max-width: 767.98px) {
-  body {
-    padding: 18px 10px 40px;
-  }
-
-  .controls {
-    padding: 18px;
-  }
-
-  .canvas-wrap {
-    margin-top: 0;
-  }
-
-  canvas {
-    max-width: 340px;
-  }
-
-  .organized-by {
-    font-size: 13px;
-    padding: 6px 18px;
-  }
-}
+/* ==========================================
+   MARQUEE
+========================================== */
 
 .informative-sub {
   width: 100%;
@@ -484,10 +60,12 @@ canvas.dragging {
   padding: 8px 0;
 
   background: rgba(0, 0, 0, 0.3);
+
   border-top: 1px solid #5a2a1a;
   border-bottom: 1px solid #5a2a1a;
 
   color: #f4825f;
+
   font-size: clamp(14px, 2vw, 19px);
   font-weight: 600;
   letter-spacing: 0.4px;
@@ -513,92 +91,140 @@ canvas.dragging {
   }
 }
 
-.poster-generator {
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
 
-/* HEADER */
-
-.title {
-  text-align: center;
-  margin: 10px 0;
-}
-
-.informative-sub {
-  width: 100%;
-  overflow: hidden;
-  padding: 8px 0;
-  white-space: nowrap;
-}
-
-.marquee-content {
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee-scroll 14s linear infinite;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-100%);
-  }
-}
+/* ==========================================
+   ORGANIZED BY
+========================================== */
 
 .organized-by {
+  display: block;
+
+  width: fit-content;
+
+  margin: 18px auto 25px;
+  padding: 7px 22px;
+
   text-align: center;
-  margin: 10px 0 25px;
+
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  color: #ffcf6b;
+
+  border: 1px dashed #7a3a22;
+  border-radius: 50px;
+
+  background: rgba(0, 0, 0, 0.25);
 }
 
-/* EDITOR */
+
+/* ==========================================
+   PHOTO EDITOR
+========================================== */
 
 .photo-editor {
   display: flex;
+
   flex-direction: row;
   align-items: center;
-  gap: 50px;
-  /* justify-content: space-between; */
-  flex-wrap: wrap;
   justify-content: center;
+
+  gap: 100px;
+
+  flex-wrap: wrap;
 }
 
 .poster-preview {
   display: flex;
+
   flex-direction: column;
   align-items: center;
+
   gap: 16px;
 }
 
-.field {
+
+/* ==========================================
+   CONTROLS
+========================================== */
+
+.controls {
   width: 100%;
   max-width: 400px;
+
+  padding: 22px;
+
+  background: rgba(0, 0, 0, 0.38);
+
+  border: 1px solid #5a2a1a;
+  border-radius: 16px;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.35),
+    inset 0 1px rgba(255, 207, 107, 0.05);
+}
+
+
+/* ==========================================
+   FIELD
+========================================== */
+
+.field {
+  width: 100%;
+  margin-bottom: 18px;
 }
 
 .field-label {
   display: block;
+
   margin-bottom: 8px;
+
+  font-size: 14px;
   font-weight: 600;
+
+  color: #ffcf6b;
 }
 
-/* UPLOAD */
+.zoom-value {
+  color: #cba579;
+  font-weight: 400;
+}
+
+
+/* ==========================================
+   UPLOAD
+========================================== */
 
 .upload-box {
   width: 100%;
   min-height: 70px;
-  border: 2px dashed #cba579;
-  border-radius: 12px;
+
+  padding: 16px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 10px;
+
+  text-align: center;
+
+  border: 2px dashed #cba579;
+  border-radius: 12px;
+
+  background: #200a08;
+
   cursor: pointer;
-  box-sizing: border-box;
+
+  transition: all 0.25s ease;
+}
+
+.upload-box:hover {
+  border-color: #ffcf6b;
+  background: #2b0d09;
+
+  transform: translateY(-1px);
 }
 
 .upload-box input {
@@ -610,8 +236,13 @@ canvas.dragging {
 }
 
 .upload-text {
-  font-size: 16px;
+  display: block;
+
+  font-size: 13px;
+
+  color: #cba579;
 }
+
 
 /* ==========================================
    SMALL ROUND PHOTO EDITOR
@@ -620,17 +251,23 @@ canvas.dragging {
 .circle-editor {
   width: 260px;
   height: 260px;
+
+  flex-shrink: 0;
+
   border-radius: 50%;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .photo-editor-canvas {
+  display: block;
+
   width: 260px;
   height: 260px;
-  display: block;
+
   border-radius: 50%;
+
   background: #f5eee4;
+
   box-shadow:
     0 0 0 4px #cba579,
     0 8px 25px rgba(0, 0, 0, 0.2);
@@ -646,15 +283,10 @@ canvas.dragging {
   cursor: grabbing;
 }
 
-/* HINT */
 
-/* .editor-hint {
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.8;
-} */
-
-/* ZOOM */
+/* ==========================================
+   ZOOM
+========================================== */
 
 .zoom-section {
   width: 100%;
@@ -664,6 +296,7 @@ canvas.dragging {
 .zoom-title {
   display: flex;
   justify-content: space-between;
+
   margin-bottom: 8px;
 }
 
@@ -671,30 +304,236 @@ canvas.dragging {
   width: 100%;
 }
 
-/* BUTTONS */
+input[type="range"] {
+  width: 100%;
+}
+
+.form-range {
+  accent-color: #d98c1f;
+}
+
+.zoom-hint {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 11px;
+
+  color: #cba579;
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
 
 .btn-download,
 .btn-whatsapp,
 .btn-reset {
   width: 100%;
   max-width: 400px;
+
   min-height: 48px;
-  border: 0;
+
   border-radius: 10px;
+
   cursor: pointer;
+
   font-size: 16px;
   font-weight: 600;
+}
+
+
+/* DOWNLOAD */
+
+.btn-download {
+  margin-top: 6px;
+
+  padding: 12px;
+
+  border: none !important;
+
+  background: linear-gradient(
+    135deg,
+    #ffcf6b,
+    #d98c1f
+  ) !important;
+
+  color: #3a1500 !important;
+
+  font-weight: 700 !important;
+}
+
+
+/* WHATSAPP */
+
+.btn-whatsapp {
+  margin-top: 10px;
+
+  padding: 12px;
+
+  border: none !important;
+
+  background: linear-gradient(
+    135deg,
+    #25d366,
+    #128c7e
+  ) !important;
+
+  color: #fff !important;
+
+  font-weight: 700 !important;
+}
+
+
+/* RESET */
+
+.btn-reset {
+  margin-top: 8px;
+
+  padding: 9px;
+
+  border: 1px solid #7a3a22 !important;
+
+  background: transparent !important;
+
+  color: #cba579 !important;
+
+  font-size: 12px !important;
+}
+
+
+/* BUTTON STATES */
+
+.btn-download:not(:disabled):active,
+.btn-whatsapp:not(:disabled):active {
+  transform: scale(0.98);
 }
 
 .btn-download:disabled,
 .btn-whatsapp:disabled {
   opacity: 0.5;
+
   cursor: not-allowed;
 }
 
-/* FOOTER */
+
+/* ==========================================
+   POSTER
+   (KEPT FOR COMPATIBILITY)
+========================================== */
+
+.canvas-wrap {
+  position: relative;
+
+  width: 100%;
+  max-width: 400px;
+
+  margin: 0 auto;
+
+  background: #000;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  line-height: 0;
+
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.canvas-wrap canvas {
+  display: block;
+
+  width: 100%;
+  max-width: 400px;
+
+  height: auto;
+}
+
+canvas {
+  display: block;
+
+  max-width: 100%;
+  height: auto;
+}
+
+canvas.draggable {
+  cursor: grab;
+}
+
+canvas.dragging {
+  cursor: grabbing;
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
 
 .site-footer {
-  text-align: center;
   margin-top: 30px;
+
+  text-align: center;
+
+  color: #a67c52;
+
+  font-size: 12px;
+
+  opacity: 0.85;
+}
+
+.site-footer strong {
+  color: #ffcf6b;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 767.98px) {
+  body {
+    padding: 18px 10px 40px;
+  }
+
+  .poster-generator {
+    padding: 10px;
+  }
+
+  .controls {
+    padding: 18px;
+  }
+
+  .organized-by {
+    margin-top: 12px;
+    margin-bottom: 20px;
+
+    padding: 6px 18px;
+
+    font-size: 13px;
+  }
+
+  .photo-editor {
+    gap: 25px;
+  }
+
+  .circle-editor {
+    width: 240px;
+    height: 240px;
+  }
+
+  .photo-editor-canvas {
+    width: 240px;
+    height: 240px;
+  }
+
+  .canvas-wrap {
+    margin-top: 0;
+  }
+
+  canvas {
+    max-width: 340px;
+  }
 }
