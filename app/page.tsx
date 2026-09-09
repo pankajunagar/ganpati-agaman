@@ -238,8 +238,8 @@ export default function Home() {
   return (
     <>
       <h1 className="title">|| શ્રી ગણપતિ બાપ્પા મોરિયા ||</h1>
-      <marquee direction="left" class="informative-sub">
-        🙏  આવો... ભક્તિ, શ્રદ્ધા અને આનંદ સાથે બાપ્પા નું સ્વાગત કરીએ ! 🙏
+      <marquee direction="left" className="informative-sub">
+        🙏. આવો... ભક્તિ, શ્રદ્ધા અને આનંદ સાથે બાપ્પા નું સ્વાગત કરીએ ! 🙏
       </marquee>
       <div className="organized-by">Friends Group દ્વારા આયોજિત</div>
       <div className="layout">

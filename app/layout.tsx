@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const metadata: Metadata = {
   title: "શ્રી ગણપતિ પોસ્ટર જનરેટર",
