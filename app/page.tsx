@@ -728,7 +728,7 @@ async function handleWhatsAppShare() {
       {/* FOOTER */}
 
       <footer className="site-footer">
-        Design by: <strong>Pankaj Unagar</strong>
+        © Created By <strong>Pankaj Unagar</strong>
       </footer>
     </>
   );
